@@ -1,0 +1,12 @@
+node_modules
+out-*
+shots
+_t
+private
+localdev/.wrangler
+*.jks
+signing.properties
+android/build
+android/.gradle
+android/app/build
+android/local.properties

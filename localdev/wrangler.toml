@@ -1,0 +1,11 @@
+name = "ah-local"
+main = "../out-local/_worker.js"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+[assets]
+directory = "../out-local"
+binding = "ASSETS"
+[[d1_databases]]
+binding = "DB"
+database_name = "ahlocal"
+database_id = "00000000-0000-0000-0000-0000000000a1"

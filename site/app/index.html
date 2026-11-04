@@ -1,0 +1,19 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0a0714"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="../favicon.png"><link rel="apple-touch-icon" href="../img/icon-512.png">
+<title>AdiHunt — hunt shadows in the real world</title><link rel="stylesheet" href="vendor/leaflet.css"><link rel="stylesheet" href="app.css"></head>
+<body><div id="app">
+<div id="auth" class="screen" hidden><svg class="logo" viewBox="0 0 100 100"><defs><radialGradient id="lg"><stop offset="0" stop-color="#3b1d8a"/><stop offset="1" stop-color="#0a0714"/></radialGradient></defs><circle cx="50" cy="50" r="46" fill="url(#lg)" stroke="#8b5cf6" stroke-width="2"/><path d="M50 14C66 24 74 44 70 62C66 76 58 86 50 86C42 86 34 76 30 62C26 44 34 24 50 14Z" fill="#05030c" stroke="#a78bfa" stroke-width="1.5"/><ellipse cx="42" cy="50" rx="4.5" ry="3.4" fill="#e9d5ff"/><ellipse cx="58" cy="50" rx="4.5" ry="3.4" fill="#e9d5ff"/></svg>
+<h1>AdiHunt</h1><div class="mut c">Walk the real world. Hunt the shadows.</div>
+<div class="card authbox"><div class="tabsw"><button id="tabLogin" class="on">Log in</button><button id="tabSignup">Sign up</button></div>
+<div class="fld"><label>Username</label><input id="auUser" autocomplete="username" autocapitalize="none" maxlength="20"></div><div class="fld"><label>Password</label><input id="auPass" type="password" autocomplete="current-password"></div>
+<div class="err" id="auErr"></div><button class="btn full" id="auGo">Log in</button>
+<div class="sm mut c gap">Free to play. A map, your phone's GPS and some courage.</div></div>
+<div class="sm mut c gap" style="max-width:340px">Play safe: stay aware of your surroundings, stay off roads, respect private property.</div></div>
+<div id="main" hidden><div id="map"></div>
+<div id="hud"><div class="hudrow"><div class="lvl" id="hLvl">1</div><div class="xpb"><div class="nm"><span id="hName"></span><span class="badge" id="hRank">E</span><span class="sp"></span><span id="hEss" class="mut"></span></div><div class="bar"><i id="hXp" style="width:0"></i></div></div><button class="pill" id="hSafe">🛡 Safe</button></div><div id="chips"></div></div>
+<div id="fabs"><button class="fab" id="fCenter" title="Centre on me">◎</button><button class="fab" id="fDemo" title="Demo / simulate walking">🚶</button><button class="fab" id="fZone" title="Territory zone">⚑</button><button class="fab" id="fGate" title="Gates and raids">🌀</button><button class="fab" id="fTrail" title="Ghost trail">👻</button></div>
+<div id="dpad" hidden><span></span><button data-d="n">▲</button><span></span><button data-d="w">◀</button><button data-d="x">■</button><button data-d="e">▶</button><span></span><button data-d="s">▼</button><span></span></div>
+<div id="panel" hidden></div><div id="sheet" hidden></div>
+<nav id="tabs"><button data-t="map" class="on"><b>🗺</b>Map</button><button data-t="legion"><b>👥</b>Legion</button><button data-t="quests"><b>📜</b>Quests</button><button data-t="guild"><b>🏰</b>Guild</button><button data-t="ranks"><b>🏆</b>Ranks</button><button data-t="me"><b>⚙</b>Me</button></nav>
+<div id="overlay" hidden></div><div id="toasts"></div></div></div>
+<script src="vendor/leaflet.js"></script><script src="art.js"></script><script src="app.js"></script></body></html>
