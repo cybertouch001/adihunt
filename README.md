@@ -8,6 +8,16 @@ short turn-based battles, extract them into your Legion, clear Dungeon Gates, jo
 * Backend: one Cloudflare Worker + D1 (SQLite), no third-party services, no paid APIs
 * Original art (procedural SVG) and sound (WebAudio synth). English UI. No tracking, no ads.
 
+## v1.1: Live Match (hide & seek)
+Host a room with a 6-letter code. One player is the **Seeker**, the rest hide. Players in the room share a safe zone that shrinks in
+steps until the last survivor wins (or the Seeker tags everyone, or time runs out). The Seeker receives everyone's location every
+2 minutes (a ping), a radar readout (distance and bearing) twice per match, and tags a hider within reach (15 m live, touch in the arena).
+Hiders get 2 decoys (a fake spot for the next ping). Two modes:
+* **Live map**: real GPS on an OpenStreetMap map (Leaflet).
+* **Virtual arena**: a 3D model of the real place built from the OpenStreetMap buildings around the host's location (three.js, bundled),
+  played in landscape with an on-screen D-pad (keyboard arrows on desktop). The Seeker sees only hiders inside a 60-degree field of view, 35 m.
+Post-match: scoreboard, ranks (Bronze to Diamond from match points) and a route replay for the players of that match.
+
 ## How to play
 1. Sign up (username + password), read the safe-play notice, allow location.
 2. Shadows appear on the map around you and despawn after a while. Walk within 40 m of one and tap it.
@@ -30,8 +40,8 @@ Speed limit (9 m/s + 30 m slack), teleport detection with a long relocation gap 
 accuracy and speed required to engage, fight state and RNG seed kept on the server, demo mode earns reduced rewards.
 
 ## Layout
-* `server/` Worker (rules.js pure game logic, game.js, social.js, admin.js, db.js, worker.js)
-* `site/` landing page, PWA (`site/app`), vendored Leaflet and QR code library
+* `server/` Worker (rules.js pure game logic, matchrules.js + match.js Live Match, game.js, social.js, admin.js, db.js, worker.js)
+* `site/` landing page, PWA (`site/app`), vendored Leaflet, QR code library and three.js (MIT, see vendor/THREE-LICENSE.txt)
 * `android/` WebView wrapper (package `bot.tab.sites.adihunt`)
 * `test/` unit tests, API tests, Playwright browser tests, balance simulation
 * `build.mjs` bundles the Worker with esbuild and assembles the static site

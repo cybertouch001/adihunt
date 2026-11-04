@@ -2,6 +2,15 @@
 import * as R from './rules.js';
 import { VERSION, ADMIN_BOOT } from './config.js';
 export { VERSION };
+export const MATCH_SCHEMA = [
+  `CREATE TABLE IF NOT EXISTS matches (id TEXT PRIMARY KEY, code TEXT NOT NULL UNIQUE, host_id TEXT NOT NULL, mode TEXT NOT NULL, status TEXT NOT NULL, lat0 REAL, lng0 REAL, radius0 REAL, head_start INTEGER, time_limit INTEGER, visibility TEXT, zone TEXT, created_at INTEGER, started_at INTEGER, release_at INTEGER, ends_at INTEGER, next_ping_at INTEGER, ended_at INTEGER, result TEXT, version INTEGER NOT NULL DEFAULT 0)`,
+  `CREATE TABLE IF NOT EXISTS match_players (match_id TEXT NOT NULL, user_id TEXT NOT NULL, role TEXT NOT NULL DEFAULT 'hider', state TEXT NOT NULL DEFAULT 'joined', joined_at INTEGER, x REAL, y REAL, pos_ts INTEGER, heading REAL, outside_since INTEGER, trail_ts INTEGER, decoy_x REAL, decoy_y REAL, decoy_until INTEGER, decoys_left INTEGER NOT NULL DEFAULT 2, radar_left INTEGER NOT NULL DEFAULT 2, points INTEGER NOT NULL DEFAULT 0, caught_by TEXT, out_at INTEGER, PRIMARY KEY (match_id, user_id))`,
+  `CREATE TABLE IF NOT EXISTS match_pings (id INTEGER PRIMARY KEY AUTOINCREMENT, match_id TEXT NOT NULL, at INTEGER NOT NULL, data TEXT NOT NULL)`,
+  `CREATE TABLE IF NOT EXISTS match_events (id INTEGER PRIMARY KEY AUTOINCREMENT, match_id TEXT NOT NULL, at INTEGER NOT NULL, kind TEXT NOT NULL, data TEXT)`,
+  `CREATE TABLE IF NOT EXISTS match_trail (id INTEGER PRIMARY KEY AUTOINCREMENT, match_id TEXT NOT NULL, user_id TEXT NOT NULL, at INTEGER NOT NULL, x REAL, y REAL)`,
+  `CREATE TABLE IF NOT EXISTS match_stats (user_id TEXT PRIMARY KEY, plays INTEGER NOT NULL DEFAULT 0, wins INTEGER NOT NULL DEFAULT 0, catches INTEGER NOT NULL DEFAULT 0, points INTEGER NOT NULL DEFAULT 0)`,
+  `CREATE INDEX IF NOT EXISTS match_players_user ON match_players (user_id)`,
+];
 export const SCHEMA = [
   `CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, username TEXT NOT NULL UNIQUE COLLATE NOCASE, pw TEXT NOT NULL, role TEXT NOT NULL DEFAULT 'player', active INTEGER NOT NULL DEFAULT 1, banned_reason TEXT, created_at INTEGER, level INTEGER NOT NULL DEFAULT 1, xp INTEGER NOT NULL DEFAULT 0, essence INTEGER NOT NULL DEFAULT 60, shards INTEGER NOT NULL DEFAULT 0, color TEXT, friend_code TEXT UNIQUE, tz INTEGER NOT NULL DEFAULT 330, lat REAL, lng REAL, acc REAL, pos_ts INTEGER, speed REAL DEFAULT 0, demo INTEGER DEFAULT 0, lock_until INTEGER DEFAULT 0, strikes INTEGER DEFAULT 0, strike_at INTEGER DEFAULT 0, walked REAL DEFAULT 0, day_walk REAL DEFAULT 0, walk_day INTEGER DEFAULT 0, trail_m REAL DEFAULT 0, guild_id TEXT, streak INTEGER DEFAULT 0, best_streak INTEGER DEFAULT 0, streak_day INTEGER DEFAULT 0, weekly_xp INTEGER DEFAULT 0, weekly_week INTEGER DEFAULT 0, caught INTEGER DEFAULT 0, wins INTEGER DEFAULT 0, gates INTEGER DEFAULT 0, zones INTEGER DEFAULT 0, trades INTEGER DEFAULT 0, crafted INTEGER DEFAULT 0, beacons INTEGER DEFAULT 0, bounties INTEGER DEFAULT 0, best_rarity INTEGER DEFAULT -1, safe_ack INTEGER DEFAULT 0, last_seen INTEGER)`,
   `CREATE TABLE IF NOT EXISTS sessions (id TEXT PRIMARY KEY, token_hash TEXT NOT NULL UNIQUE, user_id TEXT NOT NULL, app TEXT, device TEXT, created_at INTEGER, last_seen INTEGER, revoked_at INTEGER)`,
@@ -35,6 +44,8 @@ export const SCHEMA = [
   `CREATE TABLE IF NOT EXISTS map_zones (id TEXT PRIMARY KEY, name TEXT, kind TEXT, lat REAL, lng REAL, radius INTEGER, mult REAL DEFAULT 1, created_at INTEGER)`,
   `CREATE TABLE IF NOT EXISTS rl (k TEXT PRIMARY KEY, w INTEGER, n INTEGER)`,
   `CREATE TABLE IF NOT EXISTS login_fail (k TEXT PRIMARY KEY, n INTEGER, first_at INTEGER)`,
+
+  ...MATCH_SCHEMA,
 ];
 export const EVENT_PRESETS = [
   ['eclipse', 'Eclipse Hour', 'The sun goes dark everywhere — it is night for every hunter and rarer shadows surface.', { forceNight: true, rarityMult: [1, 1, 1.2, 1.6, 2, 2] }],

@@ -4,6 +4,7 @@ import { init, json, ApiError, rate } from './db.js';
 import * as G from './game.js';
 import * as S from './social.js';
 import { A } from './admin.js';
+import { MATCH_METHODS } from './match.js';
 
 const needHdr = (req) => { if (req.headers.get('x-ah') !== '1') throw new ApiError(400, 'Missing client header'); };
 const P = { // player methods: name -> handler(db, user, body)
@@ -14,6 +15,7 @@ const P = { // player methods: name -> handler(db, user, body)
   guild_create: S.guildCreate, guild_list: S.guildList, guild_join: S.guildJoin, guild_leave: S.guildLeave, guild_info: S.guildInfo, guild_boss_attack: S.guildBossAttack, guild_boss_claim: S.guildBossClaim,
   friend_add: S.friendAdd, friend_remove: S.friendRemove, friend_list: S.friendList, friend_army: S.friendArmy, trade_offer: S.tradeOffer, trade_list: S.tradeList, trade_respond: S.tradeRespond,
   gate_start: S.gateStart, gate_horn: S.gateHorn, gate_join: S.gateJoin, dungeon_state: S.dungeonState, dungeon_act: S.dungeonAct,
+  ...MATCH_METHODS, // v1.1 Live Match
 };
 async function api(req, env, method) {
   const db = env.DB; await init(db);

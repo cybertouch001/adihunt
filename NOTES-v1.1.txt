@@ -1,0 +1,49 @@
+AdiHunt v1.1.0 (versionCode 110) - build notes, 2026-11-04
+Site:    https://adihunt.sites.tab.bot/   (app /app/, admin /admin, APK /download/AdiHunt-1.1.0.apk)
+APK:     AdiHunt-1.1.0.apk 144908 bytes, sha256 5df9937eef431be0698c0720e685abf65fa80fb761438d79f1a0644b27f3b23d (live download re-checked: identical)
+Signing: same key as v1.0 (private/adihunt-release.jks, alias adihunt); cert SHA-256 1eacde949ffb2d09d6d0dae078780a0636544e8e2db64147a60e3f06cd25d485 = v1.0.0 (match).
+GitHub:  cybertouch001/adihunt, tag v1.1.0 (on top of v1.0.0 commit ae376394c9f4c995109d295317516304025b1883; commit and tag sha in the report)
+
+WHAT IS NEW
+* Live Match: lobby by 6-letter room code, 3 to 12 players, one Seeker (random at start), hiders.
+* Shrinking safe zone: the host's radius (150/300/500/800 m live; 60/100/150 m virtual), random centre inside the radius, every next circle
+  nested inside the previous one; a stage every 2 min (live) or 90 s (virtual). A hider outside the zone with a fresh position for 45 s is out.
+* Seeker ping every 2 minutes (first ping at release): everyone's last position, or "no signal" for a hider with no fresh fix.
+* Tag: live reach 15 m, virtual 4 m; only the Seeker, only a live hider with a fix from the last 30 s. A hider's own position is never sent to the Seeker outside a ping, a radar or (virtual) the field of view.
+* Radar: 2 per Seeker, returns distance (5 m steps) and bearing (15 deg steps) of hiders within 400 m. No names, no coordinates.
+* Decoys: 2 per hider; the next ping shows a spot ~90-150 m away instead of the real one.
+* Head start (0/1/2/5 min), match time limit (10/15/20/30 min), visibility setting (nobody / hiders see each other / friends see each other).
+* Host: End match button; Leave; Close room in the lobby.
+* Scoreboard, ranks Bronze/Silver/Gold/Platinum/Diamond from match points, route replay for players (kept 24 h after the match).
+* Anti-cheat: move speed check per post (live 10 m/s + 30 m slack, virtual 8 m/s + 2 m slack), accuracy above 80 m ignored, positions only while a match is running, last positions cleared at the end, the Seeker's field of view computed on the server.
+* Virtual arena: OpenStreetMap building footprints (Overpass, free, no key) for the host's real place, rendered with three.js (vendored, MIT). If Overpass is unreachable the arena falls back to a generated block layout (labelled in the HUD data attribute only).
+* Landscape: the web game asks the Android shell for landscape only during a virtual match (AdiHuntNative.orient); the rest of the app stays portrait. On the web, a rotate prompt shows in portrait.
+* Schema: 7 new tables (matches, match_players, match_pings, match_events, match_trail, match_stats) created with CREATE TABLE IF NOT EXISTS. No existing table is altered.
+* Match XP: +20 per match played, +80 for a win (applied through the existing reward path). Existing XP totals are not changed by the deploy.
+
+NAMING
+* The role is called Seeker. The word from the owner's brief is not used anywhere in the product.
+* No personal name, phone number or address appears in the app, the site or the repo.
+
+TESTS (run by the worker; not independently verified)
+* Unit: node --test test/match.test.mjs -> 14/14 (zone nesting and shrink, zone timing, ping cadence, tag rules, movement speed, field of view, radar readout, decoy, plane/GPS round trip, room codes, settings, ranks). Plus the v1.0 rules suite test/rules.test.mjs (unchanged).
+* API integration with several simultaneous clients: BASE=... node test/match_api.test.mjs -> 26/26 on a local Worker (4 accounts in a live match, 3 joining by code in parallel, host/non-host rules, one Seeker agreed by everyone, ping contents, seeker-only views, teammate visibility, tag in reach, tag refused for a hider, speed check, decoy count, tagged hider caught, radar shape, replay closed while running, host end, replay for players and refusal for outsiders, virtual field of view, zone elimination after the 45 s grace).
+* Browser (Playwright, Chromium): python3 test/pw_match.py BASE SHOTDIR -> 15/15 at 390x844 portrait (live match: create, lobby code, 2 friends join, start, running HUD, host End, end screen, replay) and 844x390 landscape (virtual arena canvas, no rotate prompt, d-pad present) and portrait rotate prompt, desktop home. No JS page errors.
+* Live smoke (non-destructive): health 1.1.0; APK download sha256 identical; 3 temporary accounts ran a live match (roles, positions, end, replay) and were deleted with the admin delete; the probe account was deleted too.
+* XP totals on live before and after the deploy: 3 users, total XP 14, identical per-user rows.
+
+NOT TESTED
+* The Android APK was never run: no emulator, no /dev/kvm. The build is signed and the manifest and bridge are inside the APK, but a phone has not run it.
+* Real phones, real GPS accuracy across several people, GPS lag between players, battery use, background behaviour.
+* The WebView landscape switch on a real device (AdiHuntNative.orient) is untested. The manifest still says portrait; the runtime request overrides it.
+* Migration on a copy of live data: NOT done as a copy. The change is additive (new tables); the live D1 binding was reused (not recreated) and the before/after XP check passed.
+* Load: no load test. Positions are short-polled (1 request per second per player in the arena, one per 2-3 s live). A large room (12 players for a long match) has not been measured against D1 limits.
+* Overpass (OSM buildings) answered HTTP 406 to this box's request during the build, so the browser test's arena used the generated block fallback. Real OSM buildings were NOT exercised in a browser here; the loader's code path is untested against live data.
+* No touch joystick: the on-screen controls are a D-pad (hold to move, turn left and right).
+
+KNOWN LIMITS
+* Live mode: a hider whose phone stops sending positions is not eliminated by the zone (no fresh fix means no zone check), and shows as "no signal" in the ping.
+* The first ping at release can predate the first GPS fixes; hiders then show as no signal in that ping.
+* Friends visibility uses the existing friends list (rows are written in both directions by the social API).
+* Match timers run on the server clock; the phone clock only draws the countdown.
+* Polling, not sockets: a match state is refreshed by short-polls (about once a second in the arena, every 2 s live) - simple and robust on Cloudflare D1, but chattier than a socket.

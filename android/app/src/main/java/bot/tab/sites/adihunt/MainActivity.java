@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.GeolocationPermissions;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -74,6 +76,13 @@ public class MainActivity extends Activity {
         s.setSupportMultipleWindows(false);
         s.setMediaPlaybackRequiresUserGesture(false);
         s.setTextZoom(100);
+        // v1.1: the web game asks for landscape only while a virtual-arena match is on screen (AdiHuntNative.orient)
+        web.addJavascriptInterface(new Object() {
+            @JavascriptInterface public void orient(String m) {
+                final int o = "landscape".equals(m) ? ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                runOnUiThread(() -> setRequestedOrientation(o));
+            }
+        }, "AdiHuntNative");
         s.setUserAgentString(s.getUserAgentString() + " AdiHuntAndroid/" + BuildConfig.VERSION_NAME);
         web.setWebViewClient(new WebViewClient() {
             @Override public boolean shouldOverrideUrlLoading(WebView v, WebResourceRequest req) {

@@ -1,0 +1,12 @@
+AdiHunt v1.0.0 (versionCode 100) - build notes, 2026-11-04
+Site:   https://adihunt.sites.tab.bot/   (app /app/, admin /admin, APK /download/AdiHunt-1.0.0.apk)
+GitHub: https://github.com/cybertouch001/adihunt  commit ae376394c9f4c995109d295317516304025b1883 tag v1.0.0 (public, scrubbed; pushed via git data API through connected_apps.request)
+APK:    AdiHunt-1.0.0.apk 144384 bytes sha256 263bb2d4fc6ca4e376cbc8b294a6574723b73274de390b6bb18ed837fd37cbbb (live download re-checked: identical)
+Signing: NEW key private/adihunt-release.jks (alias adihunt) cert SHA-256 1eacde949ffb2d09d6d0dae078780a0636544e8e2db64147a60e3f06cd25d485; props in private/signing.properties. Every update MUST use the same key. Back up private/.
+Admin: username admin, password in private/admin-password.txt (only there + in the delivery email). Hash injected at build (private/admin-boot.json).
+Build: node build.mjs out-prod <apk>  (ESBUILD_PATH, AH_BOOT=private/admin-boot.json) ; android: JAVA_HOME=<home>/jdk21 AH_SIGNING_PROPS=private/signing.properties ./gradlew --offline assembleRelease
+Publish: node <home>/tab/publish-cli.mjs site.publish '{"slug":"adihunt","source_dir":".../out-prod","title":"AdiHunt 1.0.0"}' (tab-site.json: worker kind, D1 binding DB)
+Tests: rules unit 17/17 (node --test test/rules.test.mjs); API 72 checks (test/api.test.mjs); Playwright 43/43 at 390x844 with simulated geolocation (test/pw_game.py); balance sim test/sim.mjs.
+Live checks (non-destructive): health, admin login (wrong pw -> 401), temp signup + position + world, admin delete of the temp account (live has 0 players), APK sha256, static files 200.
+NOT tested: the Android APK was never run (no emulator/KVM); real GPS accuracy, battery use, background behaviour; OSM tile load at scale; real multi-player concurrency.
+Decisions: name AdiHunt (owner message "Naam rakhna Adihunt"); slug adihunt.sites.tab.bot; brief's umbrahunt slug not used. "Adi" appears only as the game's name.

@@ -48,3 +48,47 @@ a{color:var(--vi2)}.notice{background:#2a1a05;border:1px solid #f59e0b66;color:#
 @media (min-width:760px){#panel,#sheet{left:50%;right:auto;width:560px;transform:translateX(-50%)}#sheet{animation:none}#overlay{padding-left:calc(50% - 280px);padding-right:calc(50% - 280px)}#tabs{left:50%;right:auto;width:560px;transform:translateX(-50%);border-radius:14px 14px 0 0}}
 
 .leaflet-bottom{bottom:calc(58px + var(--safe-b))}
+
+/* ---------- v1.1 Live Match ---------- */
+[hidden]{display:none!important}
+#matchView{position:fixed;inset:0;z-index:60;background:#0a0714;color:#ece8ff;overflow:auto;font-size:15px}
+#matchView .mvPane{position:relative;min-height:100%}
+#matchView .mvWrap{max-width:460px;margin:0 auto;padding:18px 16px 40px}
+#matchView h2{margin:6px 0 6px;font-size:22px}
+#matchView .mvSub{color:#a89cd6;font-size:14px;margin:4px 0 12px}
+#matchView .mvSmall{color:#8f85b8;font-size:12px;margin-top:8px;line-height:1.4}
+#matchView .mvSafe{color:#8f85b8;font-size:12px;margin:14px 0;line-height:1.45}
+#matchView .mvCard{background:#15102a;border:1px solid #2c2350;border-radius:14px;padding:12px 14px;margin:10px 0}
+#matchView .mvLbl{display:block;font-size:12px;color:#a89cd6;margin:10px 0 4px}
+#matchView .mvIn{width:100%;box-sizing:border-box;background:#0d0a1d;color:#ece8ff;border:1px solid #3b2f6e;border-radius:10px;padding:10px;font-size:15px}
+#matchView .mvRow{display:flex;gap:8px;align-items:center}
+#matchView .mvBtns{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+#matchView .mvBtns .btn{flex:1 1 auto;min-width:0}
+#matchView .btn.big{padding:14px 18px;font-size:16px}
+#matchView .btn.bad{background:#c2405e}
+#matchView .mvRowP{padding:6px 0;border-bottom:1px solid #251d43;font-size:14px}
+#matchView .mvCode{text-align:center;color:#a89cd6;font-size:13px;margin-top:10px}
+#matchView .mvCode b{display:block;font-size:40px;letter-spacing:6px;color:#fff;margin-top:2px}
+#matchView .mvWarn{background:#3b2a10;color:#ffd17b;border-radius:10px;padding:8px 10px;margin:8px 0;font-size:13px}
+#matchView .mvNote{position:absolute;left:10px;right:10px;top:64px;z-index:5;background:#1d1640;border:1px solid #4a3c8a;border-radius:10px;padding:9px 12px;font-size:14px}
+#matchView .mvNote.bad{border-color:#c2405e;background:#3a1420}
+#matchView .mvClose{position:fixed;top:8px;right:8px;z-index:70;background:#1d1640;color:#fff;border:1px solid #4a3c8a;border-radius:20px;width:36px;height:36px;font-size:16px}
+#matchView #mvRun{position:fixed;inset:0}
+#matchView #mvMap,#matchView #mvCanvas{position:absolute;inset:0;width:100%;height:100%}
+#matchView #mvCanvas{display:block}
+#matchView #mvHud{position:absolute;top:8px;left:8px;right:56px;z-index:4;pointer-events:none}
+#matchView .mvTop{display:flex;flex-wrap:wrap;gap:6px}
+#matchView .mvChip{background:rgba(13,10,29,.85);border:1px solid #3b2f6e;border-radius:12px;padding:4px 8px;font-size:12px}
+#matchView .mvChip.bad{border-color:#c2405e}
+#matchView .mvChip.ok{border-color:#2f8f6a}
+#matchView #mvActs{position:absolute;bottom:12px;right:10px;z-index:6;display:flex;flex-direction:column;gap:8px;align-items:stretch;max-width:55%}
+#matchView #mvActs .btn{font-size:14px;padding:10px 12px}
+#matchView #mvPad{position:absolute;bottom:12px;left:10px;z-index:6;display:flex;gap:8px;align-items:flex-end}
+#matchView #mvPad button{width:58px;height:58px;border-radius:29px;background:rgba(21,16,42,.9);color:#ece8ff;border:1px solid #4a3c8a;font-size:20px;touch-action:none;user-select:none}
+#matchView .mvPadMid{display:flex;flex-direction:column;gap:6px}
+#matchView #mvRotate{position:absolute;inset:0;z-index:20;background:rgba(10,7,20,.96);display:none;align-items:center;justify-content:center;text-align:center;padding:24px;font-size:17px}
+@media (orientation: portrait){ #matchView.virt #mvRotate{display:flex} }
+#matchView #mvRun .mvNote{top:auto;bottom:150px;left:10px;right:10px}
+#matchView .mvReplay{width:100%;max-width:460px;margin-top:10px;border-radius:12px;border:1px solid #2c2350}
+#matchView .sm{font-size:12px}
+#fMatch{font-size:20px}
